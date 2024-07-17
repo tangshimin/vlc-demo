@@ -1,0 +1,70 @@
+name: Test VLC on macOS
+on:
+  workflow_dispatch:
+jobs:
+
+  create-mac-package:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    name: Run on macOS
+    steps:
+
+       # Setup Java environment for the next steps
+      - name: Setup Java
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21.0.4+7'
+          architecture: aarch64
+
+      - name: Check Java architecture
+        run: java -version
+
+      # Check out current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history
+          tags: true  # Fetch all tags
+
+      - name: Setup Gradle 8.5
+        uses: gradle/actions/setup-gradle@v3
+        with:
+           gradle-version: 8.5
+        
+      # Add execute permissions to gradlew
+      - name: Set execute permissions on gradlew
+        run: chmod +x ./gradlew
+
+      # Install VLC
+      - name: Install VLC
+        run: brew install --cask vlc --no-quarantine
+
+      # Run App on macOS
+      - name: Run App on macOS  and capture screenshot
+        run: |
+          # Run the app in the background
+          ./gradlew run &
+          
+          # 循环40次，每次间隔5秒，获取屏幕截图
+          for i in {1..30}
+          do
+          screencapture -x "screenshot_$i.png" &
+          # 记录每个后台进程的 PID
+          PIDS+=("$!")
+          # 等待5秒
+          sleep 5
+          done
+          
+          # 等待所有后台进程结束
+          for pid in ${PIDS[*]}; do
+          wait $pid
+          done
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: ./*.png
