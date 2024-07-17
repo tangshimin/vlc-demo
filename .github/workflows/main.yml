@@ -3,13 +3,12 @@ on:
   workflow_dispatch:
 jobs:
 
-  create-mac-package:
+  test-vlc-on-macos:
     runs-on: macos-latest
     permissions:
       contents: write
     name: Run on macOS
     steps:
-
        # Setup Java environment for the next steps
       - name: Setup Java
       - uses: actions/checkout@v4
