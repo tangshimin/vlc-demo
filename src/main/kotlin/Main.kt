@@ -19,7 +19,7 @@ import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.system.exitProcess
 
-const val VIDEO_URL = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+const val VIDEO_URL = "https://user-images.githubusercontent.com/16540656/163662386-e82dc534-7a5a-4566-8449-fc71db51f960.mp4"
 fun main() = application {
     System.setProperty("compose.interop.blending", "true")
     var isOpen by remember { mutableStateOf(true) }
