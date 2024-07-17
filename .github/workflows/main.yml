@@ -61,8 +61,14 @@ jobs:
           wait $pid
           done
 
-      - name: Upload screenshots
+#      - name: Upload screenshots
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: screenshots
+#          path: ./*.png
+
+      - name: Upload VLC.app
         uses: actions/upload-artifact@v2
         with:
-          name: screenshots
-          path: ./*.png
+          name: VLC-app
+          path: /Applications/VLC.app
